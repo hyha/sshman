@@ -11,7 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.15
+      with:
+        versionSpec: '5.x'
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -20,7 +26,7 @@ jobs:
       run: dotnet restore
     - name: Determine Version
       id: gitversion
-      uses: gittools/actions/gitversion/execute@v0.9.7
+      uses: gittools/actions/gitversion/execute@v0.9.15
     - name: Build linux-x64
       run: dotnet publish -r linux-x64 -p:PublishReadyToRun=true --sc -p:Version=${{ steps.gitversion.outputs.nuGetVersionV2 }}
     - name: Test
