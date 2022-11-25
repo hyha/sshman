@@ -28,6 +28,11 @@ jobs:
       id: gitversion
       uses: gittools/actions/gitversion/execute@v0.9.15
     - name: Build linux-x64
-      run: dotnet publish -r linux-x64 -p:PublishReadyToRun=true --sc -p:Version=${{ steps.gitversion.outputs.nuGetVersionV2 }}
+      run: dotnet publish -c Release -r linux-x64 -p:PublishReadyToRun=true --sc -p:Version=${{ steps.gitversion.outputs.nuGetVersionV2 }}
+    - name: Persist Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: sshman-linux-x64
+        path: src/sshman/bin/Release/net6.0/linux-x64/publish/    
     - name: Test
       run: dotnet test --no-build --verbosity normal
