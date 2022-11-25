@@ -29,10 +29,16 @@ jobs:
       uses: gittools/actions/gitversion/execute@v0.9.15
     - name: Build linux-x64
       run: dotnet publish -c Release -r linux-x64 -p:PublishReadyToRun=true --sc -p:Version=${{ steps.gitversion.outputs.nuGetVersionV2 }}
+    - name: Build linux-arm64
+      run: dotnet publish -c Release -r linux-arm64 -p:PublishReadyToRun=true --sc -p:Version=${{ steps.gitversion.outputs.nuGetVersionV2 }}
+    - name: Tar linux-x64 artifact
+      run: tar -czvf sshman-linux-x64.tar.gz -C src/sshman/bin/Release/net6.0/linux-x64/publish/ .
+    - name: Tar linux-arm64 artifact
+      run: tar -czvf sshman-linux-arm64.tar.gz -C src/sshman/bin/Release/net6.0/linux-arm64/publish/ .
     - name: Persist Artifacts
       uses: actions/upload-artifact@v3
       with:
         name: sshman-linux-x64
-        path: src/sshman/bin/Release/net6.0/linux-x64/publish/    
+        path: "*.tar.gz"
     - name: Test
       run: dotnet test --no-build --verbosity normal
